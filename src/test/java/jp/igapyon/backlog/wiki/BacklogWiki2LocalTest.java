@@ -24,16 +24,26 @@ import jp.igapyon.md2tagmd.Md2TagMd;
 public class BacklogWiki2LocalTest {
     @Test
     public void test001() throws Exception {
-        BacklogWiki2Local wiki2local = new BacklogWiki2Local();
-        wiki2local.login( //
+        if (true) {
+            return;
+        }
+
+        BacklogConnection bklConn = BacklogUtil.login( //
                 MyBacklogSettings.SPACE_KEY //
                 , MyBacklogSettings.API_KEY //
                 , MyBacklogSettings.PROJECT_ID);
+
+        BacklogWiki2Local wiki2local = new BacklogWiki2Local(bklConn);
+
         wiki2local.process(new File("./target/backlog-wiki"));
     }
 
     @Test
     public void test002() throws Exception {
+        if (true) {
+            return;
+        }
+
         new Md2TagMd( //
                 new File("./target/backlog-wiki/"), //
                 new File("./target/backlog-wiki.out/")) //
