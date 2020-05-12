@@ -24,6 +24,10 @@ import jp.igapyon.md2tagmd.Md2TagMd;
 public class BacklogWiki2LocalTest {
     @Test
     public void test001() throws Exception {
+        if (true) {
+            return;
+        }
+
         BacklogConnection bklConn = BacklogUtil.login( //
                 MyBacklogSettings.SPACE_KEY //
                 , MyBacklogSettings.API_KEY //
@@ -36,6 +40,10 @@ public class BacklogWiki2LocalTest {
 
     @Test
     public void test002() throws Exception {
+        if (true) {
+            return;
+        }
+
         new Md2TagMd( //
                 new File("./target/backlog-wiki/"), //
                 new File("./target/backlog-wiki.out/")) //

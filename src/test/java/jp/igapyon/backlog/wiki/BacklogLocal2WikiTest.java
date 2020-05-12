@@ -8,6 +8,10 @@ public class BacklogLocal2WikiTest {
 
     @Test
     public void test() throws Exception {
+        if (true) {
+            return;
+        }
+
         BacklogConnection bklConn = BacklogUtil.login( //
                 MyBacklogSettings.SPACE_KEY //
                 , MyBacklogSettings.API_KEY //
