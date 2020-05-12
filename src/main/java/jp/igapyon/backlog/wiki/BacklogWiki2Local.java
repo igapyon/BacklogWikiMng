@@ -17,14 +17,12 @@ package jp.igapyon.backlog.wiki;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
-import com.nulabinc.backlog4j.ResponseList;
 import com.nulabinc.backlog4j.Wiki;
 
 /**
@@ -51,7 +49,7 @@ public class BacklogWiki2Local {
         }
 
         // Wiki名の一覧を取得します。
-        List<Wiki> wikiEntryList = getWikiList();
+        List<Wiki> wikiEntryList = BacklogUtil.getWikiList(bklConn);
 
         // Wiki をアルファベット順にソート
         Collections.sort(wikiEntryList, new Comparator<Wiki>() {
@@ -71,21 +69,5 @@ public class BacklogWiki2Local {
             Wiki lookup = bklConn.getClient().getWiki(wikiEntry.getId());
             FileUtils.write(new File(outputdir, wikiEntry.getName() + ".md"), lookup.getContent(), "UTF-8");
         }
-    }
-
-    /**
-     * Wikiの一覧を取得します。
-     * 
-     * @return Wiki の一覧。
-     */
-    protected List<Wiki> getWikiList() {
-        List<Wiki> result = new ArrayList<>();
-
-        ResponseList<Wiki> wikiList = bklConn.getClient().getWikis(bklConn.getProject().getId());
-        for (Wiki wikiLookup : wikiList) {
-            result.add(wikiLookup);
-        }
-
-        return result;
     }
 }

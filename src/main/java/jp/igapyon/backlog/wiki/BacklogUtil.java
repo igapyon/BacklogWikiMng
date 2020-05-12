@@ -16,9 +16,13 @@
 package jp.igapyon.backlog.wiki;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.nulabinc.backlog4j.BacklogAPIException;
 import com.nulabinc.backlog4j.BacklogClientFactory;
+import com.nulabinc.backlog4j.ResponseList;
+import com.nulabinc.backlog4j.Wiki;
 import com.nulabinc.backlog4j.conf.BacklogConfigure;
 import com.nulabinc.backlog4j.conf.BacklogJpConfigure;
 
@@ -50,5 +54,40 @@ public class BacklogUtil {
         }
 
         return bklConn;
+    }
+
+    /**
+     * Wikiの一覧を取得します。
+     * 
+     * @param bklConn Backlog 接続。
+     * @return Wiki の一覧。
+     */
+    public static List<Wiki> getWikiList(BacklogConnection bklConn) {
+        List<Wiki> result = new ArrayList<>();
+
+        ResponseList<Wiki> wikiList = bklConn.getClient().getWikis(bklConn.getProject().getId());
+        for (Wiki wikiLookup : wikiList) {
+            result.add(wikiLookup);
+        }
+
+        return result;
+    }
+
+    /**
+     * Wiki を名前で検索します。
+     * 
+     * @param bklConn Backlog 接続。
+     * @param name Wiki名。
+     * @return Wikiオブジェクト。
+     */
+    public static Wiki findWiki(BacklogConnection bklConn, String name) {
+        List<Wiki> wikiList = getWikiList(bklConn);
+        for (Wiki wikiLookup : wikiList) {
+            if (name.equals(wikiLookup.getName())) {
+                return wikiLookup;
+            }
+        }
+
+        return null;
     }
 }

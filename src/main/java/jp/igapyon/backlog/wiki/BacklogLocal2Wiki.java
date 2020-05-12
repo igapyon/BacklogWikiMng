@@ -18,7 +18,8 @@ package jp.igapyon.backlog.wiki;
 import java.io.File;
 import java.io.IOException;
 
-import com.nulabinc.backlog4j.ResponseList;
+import org.apache.commons.io.FileUtils;
+
 import com.nulabinc.backlog4j.Wiki;
 import com.nulabinc.backlog4j.api.option.UpdateWikiParams;
 
@@ -45,21 +46,31 @@ public class BacklogLocal2Wiki {
             throw new IllegalArgumentException("Not connected to Backlog. Please login() before process().");
         }
 
-        Wiki wikiTarget = findWiki("Index");
-
-        UpdateWikiParams params = new UpdateWikiParams(wikiTarget.getId());
-        params.content("Ugeuge");
-        bklConn.getClient().updateWiki(params);
+        updateWiki(inputdir, "Index");
     }
 
-    protected Wiki findWiki(String name) {
-        ResponseList<Wiki> wikiList = bklConn.getClient().getWikis(bklConn.getProject().getId());
-        for (Wiki wikiLookup : wikiList) {
-            if (name.equals(wikiLookup.getName())) {
-                return wikiLookup;
-            }
+    protected void updateWiki(final File inputdir, String wikiName) throws IOException {
+        String contents = null;
+        try {
+            contents = FileUtils.readFileToString(new File(inputdir, wikiName + ".md"), "UTF-8");
+        } catch (IOException ex) {
+            System.err.println("Local wiki not found: " + wikiName);
+            return;
         }
 
-        return null;
+        Wiki wikiTarget = BacklogUtil.findWiki(bklConn, wikiName);
+        if (wikiTarget == null) {
+            System.err.println("Target wiki not found: " + wikiName);
+            return;
+        }
+
+        Wiki wikiCurrent = bklConn.getClient().getWiki(wikiTarget.getId());
+        if (wikiCurrent.getContent().equals(contents)) {
+            System.err.println("Skip update wiki: " + wikiName);
+        } else {
+            System.err.println("Update wiki: " + wikiName);
+            UpdateWikiParams params = new UpdateWikiParams(wikiTarget.getId()).content(contents);
+            bklConn.getClient().updateWiki(params);
+        }
     }
 }
