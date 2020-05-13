@@ -17,6 +17,8 @@ package jp.igapyon.backlog.wiki;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.apache.commons.io.FileUtils;
 
@@ -47,6 +49,15 @@ public class BacklogLocal2Wiki {
         }
 
         updateWiki(inputdir, "Index");
+
+        Collection<File> files = FileUtils.listFiles(inputdir, new String[] { "md" }, false);
+        for (Iterator<File> ite = files.iterator(); ite.hasNext();) {
+            File look = ite.next();
+            if (look.getName().startsWith("Tag_") == false) {
+                continue;
+            }
+            updateWiki(inputdir, look.getName().substring(0, look.getName().length() - ".md".length()));
+        }
     }
 
     protected void updateWiki(final File inputdir, String wikiName) throws IOException {
